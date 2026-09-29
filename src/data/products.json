@@ -1,0 +1,72 @@
+[
+	{
+		"id": 1,
+		"name": "Wireless Keyboard",
+		"price": 29.99,
+		"stock": 42,
+		"category": "Electronics"
+	},
+	{
+		"id": 2,
+		"name": "USB-C Hub",
+		"price": 34.5,
+		"stock": 18,
+		"category": "Electronics"
+	},
+	{
+		"id": 3,
+		"name": "Insulated Water Bottle",
+		"price": 19.95,
+		"stock": 65,
+		"category": "Home & Kitchen"
+	},
+	{
+		"id": 4,
+		"name": "Notebook Set",
+		"price": 12.49,
+		"stock": 120,
+		"category": "Stationery"
+	},
+	{
+		"id": 5,
+		"name": "Mechanical Pencil",
+		"price": 4.99,
+		"stock": 200,
+		"category": "Stationery"
+	},
+	{
+		"id": 6,
+		"name": "Cotton Hoodie",
+		"price": 39.99,
+		"stock": 27,
+		"category": "Clothing"
+	},
+	{
+		"id": 7,
+		"name": "Running Shoes",
+		"price": 74.99,
+		"stock": 14,
+		"category": "Footwear"
+	},
+	{
+		"id": 8,
+		"name": "Ceramic Coffee Mug",
+		"price": 9.5,
+		"stock": 36,
+		"category": "Home & Kitchen"
+	},
+	{
+		"id": 9,
+		"name": "Desk Lamp",
+		"price": 24.75,
+		"stock": 22,
+		"category": "Home & Kitchen"
+	},
+	{
+		"id": 10,
+		"name": "Backpack",
+		"price": 49.0,
+		"stock": 31,
+		"category": "Accessories"
+	}
+]
