@@ -1,6 +1,8 @@
-from fastapi import APIRouter, HTTPException
-from src.utils.utils import get_all_products, create_product
-from src.dtos.productSchema import CreateProduct, UpdateProduct
+from fastapi import APIRouter, BackgroundTasks, HTTPException
+from fastapi_mail import FastMail, MessageSchema
+
+from src.utils.utils import get_all_products, create_product, get_mail_config
+from src.dtos.productSchema import CreateProduct, UpdateProduct, OrderSchema
 
 productRoutes = APIRouter()
 
@@ -87,3 +89,71 @@ def deleteProduct(id: int = None):
         status_code=400,
         detail={"error": "Product ID not found"}
     )
+
+
+
+
+
+
+@productRoutes.post("/order")
+async def PlaceOrder(orderDetails:OrderSchema, background_tasks: BackgroundTasks):
+    count = orderDetails.count
+    product_id = orderDetails.product_id
+    email = orderDetails.email
+
+    if count <= 0:
+        raise HTTPException(status_code=400, detail={"error": "order quantity must be greater than 0"})
+
+    if product_id is None:
+        raise HTTPException(status_code=400, detail={"error": "product id is required"})
+
+    if not email:
+        raise HTTPException(status_code=400, detail={"error": "email is required"})
+
+    allProducts = get_all_products()
+    oneProduct = None
+
+    for index, p in enumerate(allProducts):
+        if p["id"] == product_id:
+            oneProduct = p
+            break
+
+    if not oneProduct:
+        raise HTTPException(status_code=400, detail={"error": "product id not found"})
+
+    if oneProduct["stock"] < count:
+        raise HTTPException(
+            status_code=400,
+            detail={"error": "insufficient stock for this product"}
+        )
+
+    oneProduct["stock"] -= count
+    create_product(allProducts)
+
+    mailConfig = get_mail_config()
+    if mailConfig is not None:
+        message = MessageSchema(
+            subject="Order placed successfully",
+            recipients=[email],
+            body=(
+                f"Hello,\n\n"
+                f"Your order for {oneProduct['name']} has been placed successfully.\n"
+                f"Quantity: {count}\n"
+                f"Remaining stock: {oneProduct['stock']}\n"
+            ),
+            subtype="plain",
+        )
+
+        async def send_email_in_background():
+            fm = FastMail(mailConfig)
+            await fm.send_message(message)
+
+        background_tasks.add_task(send_email_in_background)
+
+    return {
+        "message": "Order placed successfully",
+        "product_id": product_id,
+        "email": email,
+        "quantity": count,
+        "remaining_stock": oneProduct["stock"]
+    }

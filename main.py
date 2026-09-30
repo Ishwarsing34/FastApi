@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from src.routes.productRoute import productRoutes
+from src.routes.userRoutes import userRoutes
 
 app = FastAPI(
     title="fastapi crash course",
@@ -17,6 +18,7 @@ def Home():
 #### CRUD API - Products -- JSON FILE
 
 app.include_router(productRoutes, prefix="/products")
+app.include_router(userRoutes, prefix="/users")
 
 
 
